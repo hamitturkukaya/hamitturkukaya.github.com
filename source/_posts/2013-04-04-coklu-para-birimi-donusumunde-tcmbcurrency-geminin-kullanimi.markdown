@@ -3,7 +3,8 @@ layout: post
 title: "Çoklu para birimi dönüşümünde TcmbCurrency geminin Kullanımı"
 date: 2013-04-04 14:18
 comments: true
-categories: 
+author: Hamit Türkü Kaya
+categories: ['tcmb_currency', 'money gem']
 ---
 Rails'da Çoklu para birimi dönüşümü (Multi Currency) için geliştirilmiş olan [money gem](https://github.com/RubyMoney/money) ve [money-rails gem](https://github.com/RubyMoney/money-rails)'i ni kullanırken geçmişe yönelik dönüşüm yapma sıkıntısı ve oranları __Türkiye Cumhuriyeti Merkez Bankası__'ndan kur almak amacıyla [google-currency gem](https://github.com/RubyMoney/google_currency)'ini uyarlanmıştır. Bu gem ile Merkez Bankası'ndaki 20'ye yakın para birimi ile dönüşümü [Money](https://github.com/RubyMoney/money) gemi altyapısıyla kullanabilirsiniz.
 
