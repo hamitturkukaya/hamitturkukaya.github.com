@@ -19,7 +19,7 @@ Gemler yüklenip, projeye dahil edildikten sonra terminalden
 	$ rake db:migrate
 
 komutlarını çalıştırıp initializer dosyasını ve database tablolarını oluşturuyoruz.
-
+<!-- more -->
 Son olarak ise
 
 	$ rake tcmb_currency:insert_from_tcmb

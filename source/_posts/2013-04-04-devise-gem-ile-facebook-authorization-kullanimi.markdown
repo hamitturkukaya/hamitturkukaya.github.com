@@ -22,7 +22,7 @@ config.omniauth :facebook, 'XXXXXX', 'YYYYYYY'
 ```
 
 Bu işlemden sonra istek başarılı olursa User tablomuzda tutlacak Facebook provider id için bir migration oluştruyoruz.
-
+<!-- more -->
 #####db/migrate/xxxx_add_provider_id_to_users.rb
 ```ruby
 class AddProviderIdToUsers < ActiveRecord::Migration
