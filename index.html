@@ -112,61 +112,12 @@ $ rake db:migrate
 
 <p>komutlarını çalıştırıp initializer dosyasını ve database tablolarını oluşturuyoruz.</p>
 
-<p>Son olarak ise</p>
-
-<pre><code>$ rake tcmb_currency:insert_from_tcmb
-</code></pre>
-
-<p>rake task&#8217;ını günlük olarak çalışacak bir cron job a atayarak (bu iş için <a href="https://github.com/javan/whenever">whenever gem</a> kullanılabilir), günlük olarak oranların database&#8217;e eklenmesi sağlanır</p>
-
-<p>Ardından tek yapılması gereken money gemi işlemleri cent,kuruş vb. bazlı yaptığı için modelinize <em>monetize :price_cents</em> eklemek.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Product</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
-</span><span class='line'><span class="n">attr_accessible</span> <span class="ss">:price</span><span class="p">,</span> <span class="ss">:product</span> <span class="p">,</span><span class="ss">:price_cents</span><span class="p">,</span> <span class="ss">:price_currency</span>
-</span><span class='line'><span class="n">monetize</span> <span class="ss">:price_cents</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-Artık view katmanında
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='erb'><span class='line'><span class="cp">&lt;%</span> <span class="vi">@products</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">product</span><span class="o">|</span> <span class="cp">%&gt;</span><span class="x"></span>
-</span><span class='line'><span class="x">&lt;tr&gt;</span>
-</span><span class='line'><span class="x">&lt;td&gt;</span><span class="cp">&lt;%=</span> <span class="n">product</span><span class="o">.</span><span class="n">product</span> <span class="cp">%&gt;</span><span class="x">&lt;/td&gt;</span>
-</span><span class='line'><span class="cp">&lt;%</span> <span class="n">price</span> <span class="o">=</span><span class="no">Money</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">product</span><span class="o">.</span><span class="n">price_cents</span><span class="p">,</span><span class="n">product</span><span class="o">.</span><span class="n">price_currency</span><span class="p">)</span> <span class="cp">%&gt;</span><span class="x"></span>
-</span><span class='line'><span class="x">&lt;td&gt;</span><span class="cp">&lt;%=</span> <span class="n">humanized_money_with_symbol</span> <span class="n">price</span> <span class="cp">%&gt;</span><span class="x">&lt;/td&gt;</span>
-</span><span class='line'><span class="x">&lt;td&gt;</span><span class="cp">&lt;%=</span> <span class="n">humanized_money_with_symbol</span> <span class="n">price</span><span class="o">.</span><span class="n">exchange_to</span><span class="p">(</span><span class="ss">:JPY</span><span class="p">)</span> <span class="cp">%&gt;</span><span class="x">&lt;/td&gt;</span>
-</span><span class='line'><span class="x">&lt;td&gt;</span><span class="cp">&lt;%=</span> <span class="n">humanized_money_with_symbol</span> <span class="n">price</span><span class="o">.</span><span class="n">exchange_to</span><span class="p">(</span><span class="ss">:EUR</span><span class="p">,</span> <span class="s2">&quot;2013-03-06&quot;</span><span class="p">)</span> <span class="cp">%&gt;</span><span class="x">&lt;/td&gt;</span>
-</span><span class='line'><span class="x">&lt;td&gt;</span><span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s1">&#39;Show&#39;</span><span class="p">,</span> <span class="n">product</span> <span class="cp">%&gt;</span><span class="x">&lt;/td&gt;</span>
-</span><span class='line'><span class="x">&lt;td&gt;</span><span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s1">&#39;Edit&#39;</span><span class="p">,</span> <span class="n">edit_product_path</span><span class="p">(</span><span class="n">product</span><span class="p">)</span> <span class="cp">%&gt;</span><span class="x">&lt;/td&gt;</span>
-</span><span class='line'><span class="x">&lt;td&gt;</span><span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s1">&#39;Destroy&#39;</span><span class="p">,</span> <span class="n">product</span><span class="p">,</span> <span class="nb">method</span><span class="p">:</span> <span class="ss">:delete</span><span class="p">,</span> <span class="ss">data</span><span class="p">:</span> <span class="p">{</span> <span class="ss">confirm</span><span class="p">:</span> <span class="s1">&#39;Are you sure?&#39;</span> <span class="p">}</span> <span class="cp">%&gt;</span><span class="x">&lt;/td&gt;</span>
-</span><span class='line'><span class="x">&lt;/tr&gt;</span>
-</span><span class='line'><span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span><span class="x"></span>
-</span></code></pre></td></tr></table></div></figure>
-şeklinde kullanabilirsiniz
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Money</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="s2">&quot;USD&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exchange_to</span><span class="p">(</span><span class="ss">:EUR</span><span class="p">)</span> <span class="c1"># O güne ait oranlara göre dönüşüm yapar</span>
-</span><span class='line'><span class="no">Money</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="s2">&quot;USD&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exchange_to</span><span class="p">(</span><span class="ss">:EUR</span><span class="p">,</span> <span class="s2">&quot;2013-03-02&quot;</span><span class="p">)</span> <span class="c1"># Verilen tarihe ait oranlara göre dönüşüm yapar</span>
-</span></code></pre></td></tr></table></div></figure>
-
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/04/04/coklu-para-birimi-donusumunde-tcmbcurrency-geminin-kullanimi/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -219,102 +170,12 @@ ve devise initilializerina bu api keyi giriyoruz</p>
 </span></code></pre></td></tr></table></div></figure>
 
 Bu işlemden sonra istek başarılı olursa User tablomuzda tutlacak Facebook provider id için bir migration oluştruyoruz.
-
-#####db/migrate/xxxx_add_provider_id_to_users.rb
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">AddProviderIdToUsers</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Migration</span>
-</span><span class='line'><span class="k">def</span> <span class="nf">change</span>
-</span><span class='line'><span class="n">add_column</span> <span class="ss">:users</span><span class="p">,</span> <span class="ss">:provider_id</span><span class="p">,</span> <span class="ss">:string</span>
-</span><span class='line'><span class="n">add_index</span> <span class="ss">:users</span><span class="p">,</span> <span class="ss">:provider_id</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-migration&#8217;ımızı oluşturduktan sonra &#8216;rake db:migrate&#8217; koutuyla değişiklikleri uyguluyoruz.
-
-Sıradaki işlem de facebook&#8217;tan gelen callbackleri kontrl edecek controllerı yazmak bu yüzden auth_callbacks_controller.rb dosyamızı oluşturup içine kullanıcı kayıtlıysa session açan, değilse üye yapan metodumuzu yazıyoruz
-
-#####app/controllers/auth_callbacks_controller.rb
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">AuthCallbacksController</span> <span class="o">&lt;</span> <span class="ss">Devise</span><span class="p">:</span><span class="ss">:OmniauthCallbacksController</span>
-</span><span class='line'><span class="k">def</span> <span class="nf">facebook</span>
-</span><span class='line'><span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">find_for_facebook_oauth</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">env</span><span class="o">[</span><span class="s2">&quot;omniauth.auth&quot;</span><span class="o">]</span><span class="p">,</span> <span class="n">current_user</span><span class="p">)</span>
-</span><span class='line'><span class="k">if</span> <span class="vi">@user</span><span class="o">.</span><span class="n">persisted?</span>
-</span><span class='line'><span class="n">flash</span><span class="o">[</span><span class="ss">:success</span><span class="o">]</span> <span class="o">=</span> <span class="no">I18n</span><span class="o">.</span><span class="n">t</span> <span class="s2">&quot;devise.omniauth_callbacks.success&quot;</span><span class="p">,</span> <span class="ss">:kind</span> <span class="o">=&gt;</span> <span class="s2">&quot;Facebook&quot;</span>
-</span><span class='line'><span class="n">sign_in_and_redirect</span> <span class="vi">@user</span><span class="p">,</span> <span class="ss">:event</span> <span class="o">=&gt;</span> <span class="ss">:authentication</span>
-</span><span class='line'><span class="k">else</span>
-</span><span class='line'><span class="n">session</span><span class="o">[</span><span class="s2">&quot;devise.facebook_data&quot;</span><span class="o">]</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">env</span><span class="o">[</span><span class="s2">&quot;omniauth.auth&quot;</span><span class="o">]</span>
-</span><span class='line'><span class="n">redirect_to</span> <span class="n">new_user_registration_url</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-Son işlemimiz de User modelimizi omniauthable olarak belirtmek ve tablomuza kaydedecek methodu yazmak ve route işlemlerini yapmak olacak
-bunun için önce model dosyamıza
-
-#####app/models/user.rb
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">devise</span> <span class="ss">:database_authenticatable</span><span class="p">,</span> <span class="ss">:registerable</span><span class="p">,</span>
-</span><span class='line'><span class="ss">:recoverable</span><span class="p">,</span> <span class="ss">:rememberable</span><span class="p">,</span> <span class="ss">:trackable</span><span class="p">,</span> <span class="ss">:validatable</span><span class="p">,</span> <span class="ss">:omniauthable</span><span class="p">,</span> <span class="ss">:omniauth_providers</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:facebook</span><span class="o">]</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">find_for_facebook_oauth</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">signed_in_resource</span><span class="o">=</span><span class="kp">nil</span><span class="p">)</span>
-</span><span class='line'><span class="n">data</span> <span class="o">=</span> <span class="n">access_token</span><span class="o">.</span><span class="n">extra</span><span class="o">.</span><span class="n">raw_info</span>
-</span><span class='line'><span class="n">user</span> <span class="o">=</span> <span class="n">find_by_provider_id</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-</span><span class='line'><span class="k">if</span> <span class="n">user</span>
-</span><span class='line'><span class="n">user</span>
-</span><span class='line'><span class="k">else</span>
-</span><span class='line'><span class="n">create!</span><span class="p">(</span><span class="ss">email</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">email</span><span class="p">,</span> <span class="nb">name</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="ss">password</span><span class="p">:</span> <span class="no">Devise</span><span class="o">.</span><span class="n">friendly_token</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="o">]</span><span class="p">,</span> <span class="n">provider_id</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-</span><span class='line'><span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-kodlarını ekliyoruz ve routes.rb dosyasındaki &#8216;devise_for :users&#8217; satırını
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">devise_for</span> <span class="ss">:users</span><span class="p">,</span> <span class="ss">:controllers</span> <span class="o">=&gt;</span> <span class="p">{</span>
-</span><span class='line'><span class="ss">:omniauth_callbacks</span> <span class="o">=&gt;</span> <span class="s2">&quot;auth_callbacks&quot;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-şeklinde değiştiriyoruz.
-
-Artık tek yapmamız gereken istediğimiz yerden
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">=</span> <span class="n">link_to</span> <span class="s2">&quot;Facebook Login&quot;</span><span class="p">,</span><span class="n">user_omniauth_authorize_path</span><span class="p">(</span><span class="ss">provider</span><span class="p">:</span> <span class="s1">&#39;facebook&#39;</span><span class="p">)</span> <span class="p">,</span> <span class="ss">class</span><span class="p">:</span> <span class="s1">&#39;auth_provider&#39;</span>
-</span></code></pre></td></tr></table></div></figure>
-linkini view katmanına eklemek. 
-
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/04/04/devise-gem-ile-facebook-authorization-kullanimi/">Read on &rarr;</a>
+    </footer>
   
 
 

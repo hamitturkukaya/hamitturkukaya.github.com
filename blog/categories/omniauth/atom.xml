@@ -4,7 +4,7 @@
   <title><![CDATA[Category: omniauth | Hamit Türkü Kaya]]></title>
   <link href="http://hamitturkukaya.github.com/blog/categories/omniauth/atom.xml" rel="self"/>
   <link href="http://hamitturkukaya.github.com/"/>
-  <updated>2013-04-04T14:20:34+03:00</updated>
+  <updated>2013-04-04T14:23:52+03:00</updated>
   <id>http://hamitturkukaya.github.com/</id>
   <author>
     <name><![CDATA[Hamit Türkü Kaya]]></name>
@@ -36,6 +36,9 @@ config.omniauth :facebook, 'XXXXXX', 'YYYYYYY'
 </code></p>
 
 <p>Bu işlemden sonra istek başarılı olursa User tablomuzda tutlacak Facebook provider id için bir migration oluştruyoruz.</p>
+
+<!-- more -->
+
 
 <h5>db/migrate/xxxx_add_provider_id_to_users.rb</h5>
 

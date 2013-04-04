@@ -4,7 +4,7 @@
   <title><![CDATA[Hamit Türkü Kaya]]></title>
   <link href="http://hamitturkukaya.github.com/atom.xml" rel="self"/>
   <link href="http://hamitturkukaya.github.com/"/>
-  <updated>2013-04-04T14:20:34+03:00</updated>
+  <updated>2013-04-04T14:23:52+03:00</updated>
   <id>http://hamitturkukaya.github.com/</id>
   <author>
     <name><![CDATA[Hamit Türkü Kaya]]></name>
@@ -35,6 +35,9 @@ $ rake db:migrate
 </code></pre>
 
 <p>komutlarını çalıştırıp initializer dosyasını ve database tablolarını oluşturuyoruz.</p>
+
+<!-- more -->
+
 
 <p>Son olarak ise</p>
 
@@ -116,7 +119,7 @@ ve devise initilializerina bu api keyi giriyoruz</p>
 </span></code></pre></td></tr></table></div></figure>
 
 Bu işlemden sonra istek başarılı olursa User tablomuzda tutlacak Facebook provider id için bir migration oluştruyoruz.
-
+<!-- more -->
 #####db/migrate/xxxx_add_provider_id_to_users.rb
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
