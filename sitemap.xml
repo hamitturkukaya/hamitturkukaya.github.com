@@ -1,15 +1,27 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
+        <loc>
+            http://hamitturkukaya.github.com/blog/2013/04/04/devise-gem-ile-facebook-authorization-kullanimi/
+        </loc>
+        <lastmod>2013-04-04T14:15:21+03:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://hamitturkukaya.github.com/blog/2013/04/04/coklu-para-birimi-donusumunde-tcmbcurrency-geminin-kullanimi/
+        </loc>
+        <lastmod>2013-04-04T14:20:07+03:00</lastmod>
+    </url>
+    <url>
         <loc>http://hamitturkukaya.github.com/robots.txt</loc>
         <lastmod>2013-04-03T18:34:12+03:00</lastmod>
     </url>
     <url>
         <loc>http://hamitturkukaya.github.com/blog/archives/</loc>
-        <lastmod>2013-04-03T18:34:12+03:00</lastmod>
+        <lastmod>2013-04-04T14:20:07+03:00</lastmod>
     </url>
     <url>
         <loc>http://hamitturkukaya.github.com/</loc>
-        <lastmod>2013-04-03T18:34:12+03:00</lastmod>
+        <lastmod>2013-04-04T14:20:07+03:00</lastmod>
     </url>
 </urlset>
