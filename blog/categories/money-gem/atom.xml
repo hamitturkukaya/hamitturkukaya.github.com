@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: money gem | Hamit Türkü Kaya]]></title>
+  <link href="http://hamitturkukaya.github.com/blog/categories/money-gem/atom.xml" rel="self"/>
+  <link href="http://hamitturkukaya.github.com/"/>
+  <updated>2013-04-04T15:05:10+03:00</updated>
+  <id>http://hamitturkukaya.github.com/</id>
+  <author>
+    <name><![CDATA[Hamit Türkü Kaya]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Çoklu para birimi dönüşümünde TcmbCurrency geminin Kullanımı]]></title>
+    <link href="http://hamitturkukaya.github.com/blog/2013/04/04/coklu-para-birimi-donusumunde-tcmbcurrency-geminin-kullanimi/"/>
+    <updated>2013-04-04T14:18:00+03:00</updated>
+    <id>http://hamitturkukaya.github.com/blog/2013/04/04/coklu-para-birimi-donusumunde-tcmbcurrency-geminin-kullanimi</id>
+    <content type="html"><![CDATA[<p>Rails'da Çoklu para birimi dönüşümü (Multi Currency) için geliştirilmiş olan <a href="https://github.com/RubyMoney/money">money gem</a> ve <a href="https://github.com/RubyMoney/money-rails">money-rails gem</a>'i ni kullanırken geçmişe yönelik dönüşüm yapma sıkıntısı ve oranları <strong>Türkiye Cumhuriyeti Merkez Bankası</strong>'ndan kur almak amacıyla <a href="https://github.com/RubyMoney/google_currency">google-currency gem</a>'ini uyarlanmıştır. Bu gem ile Merkez Bankası'ndaki 20'ye yakın para birimi ile dönüşümü <a href="https://github.com/RubyMoney/money">Money</a> gemi altyapısıyla kullanabilirsiniz.</p>
+
+<p>Öncelikle gemfile'ımıza <strong>money-rails</strong> ve <strong>tcmb_currency</strong> gemlerini ekliyoruz</p>
+
+<pre><code>gem 'money-rails'
+gem 'tcmb_currency', :git =&gt; 'git://github.com/lab2023/tcmb_currency.git'
+</code></pre>
+
+<p>ve ardından <em>bundle install</em> komutunu çalıştırarak gemleri projeye dahil ediyoruz.
+Gemler yüklenip, projeye dahil edildikten sonra terminalden</p>
+
+<pre><code>$ rails g tcmb_currency:initializer
+$ rails g tcmb_currency:migration
+$ rake db:migrate
+</code></pre>
+
+<p>komutlarını çalıştırıp initializer dosyasını ve database tablolarını oluşturuyoruz.</p>
+
+<!-- more -->
+
+
+<p>Son olarak ise</p>
+
+<pre><code>$ rake tcmb_currency:insert_from_tcmb
+</code></pre>
+
+<p>rake task'ını günlük olarak çalışacak bir cron job a atayarak (bu iş için <a href="https://github.com/javan/whenever">whenever gem</a> kullanılabilir), günlük olarak oranların database'e eklenmesi sağlanır</p>
+
+<p>Ardından tek yapılması gereken money gemi işlemleri cent,kuruş vb. bazlı yaptığı için modelinize <em>monetize :price_cents</em> eklemek.</p>
+
+<p><code>ruby
+class Product &lt; ActiveRecord::Base
+attr_accessible :price, :product ,:price_cents, :price_currency
+monetize :price_cents
+end
+</code></p>
+
+<p>Artık view katmanında
+<code>erb
+&lt;% @products.each do |product| %&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;%= product.product %&gt;&lt;/td&gt;
+&lt;% price =Money.new(product.price_cents,product.price_currency) %&gt;
+&lt;td&gt;&lt;%= humanized_money_with_symbol price %&gt;&lt;/td&gt;
+&lt;td&gt;&lt;%= humanized_money_with_symbol price.exchange_to(:JPY) %&gt;&lt;/td&gt;
+&lt;td&gt;&lt;%= humanized_money_with_symbol price.exchange_to(:EUR, "2013-03-06") %&gt;&lt;/td&gt;
+&lt;td&gt;&lt;%= link_to 'Show', product %&gt;&lt;/td&gt;
+&lt;td&gt;&lt;%= link_to 'Edit', edit_product_path(product) %&gt;&lt;/td&gt;
+&lt;td&gt;&lt;%= link_to 'Destroy', product, method: :delete, data: { confirm: 'Are you sure?' } %&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;% end %&gt;
+</code>
+şeklinde kullanabilirsiniz</p>
+
+<p><code>ruby
+Money.new(1000,"USD").exchange_to(:EUR) # O güne ait oranlara göre dönüşüm yapar
+Money.new(1000,"USD").exchange_to(:EUR, "2013-03-02") # Verilen tarihe ait oranlara göre dönüşüm yapar
+</code></p>
+]]></content>
+  </entry>
+  
+</feed>

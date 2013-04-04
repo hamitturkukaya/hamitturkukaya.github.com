@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: will_paginate | Hamit Türkü Kaya]]></title>
+  <link href="http://hamitturkukaya.github.com/blog/categories/will-paginate/atom.xml" rel="self"/>
+  <link href="http://hamitturkukaya.github.com/"/>
+  <updated>2013-04-04T15:05:10+03:00</updated>
+  <id>http://hamitturkukaya.github.com/</id>
+  <author>
+    <name><![CDATA[Hamit Türkü Kaya]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Tolk &amp; Wice_grid Çakışması Çözümü]]></title>
+    <link href="http://hamitturkukaya.github.com/blog/2013/04/04/tolk-and-wice-grid-cakismasi/"/>
+    <updated>2013-04-04T14:41:00+03:00</updated>
+    <id>http://hamitturkukaya.github.com/blog/2013/04/04/tolk-and-wice-grid-cakismasi</id>
+    <content type="html"><![CDATA[<p>I18n dil dosyalarını bir web arayüzünden değiştirebilme imkanı sağlayan <a href="https://github.com/tolk/tolk">tolk</a> gemini, sisteminizde <a href="https://github.com/leikind/wice_grid">wice_grid</a> gemi ile birlikte kullanmaya çalıştığımızda 'undefined method' hatası alıyoruz. bunun nedeni tolk geminin kendi sayfalarını listelemek için <a href="https://github.com/mislav/will_paginate">will_paginate</a>, wice_grid'in ise
+<a href="https://github.com/amatsuda/kaminari">kaminari</a> kullanması.</p>
+
+<!-- more -->
+
+
+<p>2 gemin methodları çakıştığı için sistemimiz çöküyordu. Projenin bu aşamasından sonra wice_grid'den vazgeçilemeyeceği için methodlara alias atamak ta işe yaramayınca tolk geminin güncel sürümünü kaminari'ye uyumlu hale getirelim dedik. Kaminari ile uyumlu güncel tolk gemine <a href="https://github.com/hamitturkukaya/tolk">buradan</a> ulaşabilirsiniz.</p>
+
+<p>Kullanım için öncelikle gemfile'ımıza</p>
+
+<pre><code>gem 'tolk', git: 'git@github.com:hamitturkukaya/tolk.git'
+</code></pre>
+
+<p>gemimizi ekleyip, bundle install'la kurup projeye dahil ediyoruz.
+ardından gemimizin gerekli dosyaları ve migrationları oluşturabilmesi için</p>
+
+<pre><code>$ rake tolk:setup
+$ rake db:migrate
+</code></pre>
+
+<p>komutlarını çalıştırıyoruz. Bu işlemden sonra</p>
+
+<pre><code>$ rake tolk:setup
+</code></pre>
+
+<p>komutuyla birincil dil dosyasındaki verileri tarayıp tolk geminin kullandığı tablolara kaydediyoruz. Eğer diğer dil dosyalarınızda da verileriniz varsa</p>
+
+<pre><code>$ rake tolk:import
+</code></pre>
+
+<p>komutuyla onları da içeri aktarabilirsiniz.</p>
+
+<p>Artık geriye kalan tek iş <code>/tolk</code> adresine girip dil dosyalarımızı düzenledikten sonra <code>Apply changes</code> diyerek <code>.yml</code> dosyalarımızı güncellemek.</p>
+]]></content>
+  </entry>
+  
+</feed>
